@@ -29,6 +29,12 @@ try:
 except ImportError:
     from urlparse import urlparse
 
+from .tools.my_des import MyDes
+from .tools.cache import cache
+from datetime import datetime
+from .tools.cache import get_seconds_diff
+from time import time
+
 
 DEFAULT_PORT = 22
 
@@ -316,6 +322,8 @@ class IndexHandler(MixinHandler, tornado.web.RequestHandler):
 
     executor = ThreadPoolExecutor(max_workers=cpu_count()*5)
 
+    des = None  # des algorithm
+
     def initialize(self, loop, policy, host_keys_settings):
         super(IndexHandler, self).initialize(loop)
         self.policy = policy
@@ -487,8 +495,69 @@ class IndexHandler(MixinHandler, tornado.web.RequestHandler):
     def head(self):
         pass
 
+    def check_ciphertext(self, ct, expired_seconds=5*60):
+        if self.des is None:
+            self.des = MyDes(options.key)
+
+        if cache.get(ct):
+            self.finish(
+                {
+                    'message': 'used error: ct has already been used!',
+                }
+            )
+            return 0
+
+        msg = self.des.decrypt(ct)
+
+        if not msg:
+            self.finish(
+                {
+                    'message': 'decrypt error: cannot convert ct to msg!',
+                }
+            )
+            return 0
+
+        try:
+            dc = json.loads(msg)
+        except Exception as e:
+            self.finish(
+                {
+                    'message': 'json loads error: cannot loads ct to a dict!',
+                }
+            )
+            return 0
+
+        t2 = int(dc.get('time')) / 1000  # js一般发的是毫秒
+        t1 = time()
+        interval = get_seconds_diff(t1, t2)
+        if interval > expired_seconds:
+            info = f"online: {datetime.fromtimestamp(t1)}, local:{datetime.fromtimestamp(t2)}"
+            self.finish(
+                {
+                    'message': 'expired error: ct time is expired!',
+                    'info': info
+                }
+            )
+            return 0
+
+        cache.set(ct, True, expired_seconds + 1)
+        return 1
+
     def get(self):
-        self.render('index.html', debug=self.debug, font=self.font)
+        _ct = self.request.query_arguments.get('ct')        # ciphertext
+        if _ct:
+            ct = _ct[0].decode('utf-8')
+            ret = self.check_ciphertext(ct, expired_seconds=3)
+            if not ret:
+                return
+        else:
+            # forbidden user login by index.html, must login with ciphertext
+            if options.forbiddenindex:
+                raise tornado.web.HTTPError(
+                    403, "Forbidden login by index.html"
+                )
+
+        self.render('index.html', debug=self.debug, font=self.font, key=options.key)
 
     @tornado.gen.coroutine
     def post(self):

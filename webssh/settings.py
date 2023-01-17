@@ -53,6 +53,8 @@ define('encoding', default='',
 Example: --encoding='utf-8' to solve the problem with some switches&routers''')
 define('version', type=bool, help='Show version information',
        callback=print_version)
+define('key', default='TESTKEY2', help='The key for DES algorithm')
+define('forbiddenindex', type=bool, default=False, help='Forbidden login by index.html')
 
 
 base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
