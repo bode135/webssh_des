@@ -507,12 +507,20 @@ class IndexHandler(MixinHandler, tornado.web.RequestHandler):
             )
             return 0
 
-        msg = self.des.decrypt(ct)
+        try:
+            msg = self.des.decrypt(ct)
+        except Exception as e:
+            self.finish(
+                {
+                    f'message': 'decrypt ct error: cannot decrypt ct to msg! error: {e}',
+                }
+            )
+            return 0
 
         if not msg:
             self.finish(
                 {
-                    'message': 'decrypt error: cannot convert ct to msg!',
+                    'message': 'decrypt ct error: decrypted msg is empty!',
                 }
             )
             return 0
@@ -527,7 +535,16 @@ class IndexHandler(MixinHandler, tornado.web.RequestHandler):
             )
             return 0
 
-        t2 = int(dc.get('time')) / 1000  # js一般发的是毫秒
+        try:
+            t2 = int(dc.get('time')) / 1000  # js一般发的是毫秒
+        except Exception as e:
+            self.finish(
+                {
+                    'message': f'time error: cannot convert time to int! error: {e}',
+                }
+            )
+            return 0
+
         t1 = time()
         interval = get_seconds_diff(t1, t2)
         if interval > expired_seconds:
