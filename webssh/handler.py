@@ -512,7 +512,7 @@ class IndexHandler(MixinHandler, tornado.web.RequestHandler):
         except Exception as e:
             self.finish(
                 {
-                    f'message': 'decrypt ct error: cannot decrypt ct to msg! error: {e}',
+                    f'message': f'decrypt ct error: cannot decrypt ct to msg! error: {e}',
                 }
             )
             return 0
