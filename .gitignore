@@ -63,3 +63,5 @@ target/
 
 # known_hosts file
 known_hosts
+
+shells/
