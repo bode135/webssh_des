@@ -21,8 +21,13 @@
 
 > nginx配置参考原项目`Readme.md`
 
+- [关于pip安装github项目](https://blog.csdn.net/rocking_struggling/article/details/127700199#:~:text=cd%E5%88%B0github%E5%8C%85%E4%B8%ADsetup.py%E6%89%80%E5%9C%A8%E7%9B%AE%E5%BD%95%E4%B8%8B%20%E6%89%A7%E8%A1%8C%20pip,install.%E6%88%96%E8%80%85python%20setup.py%20install)
+
 ```
-python run.py --address='127.0.0.1' --port=28000 --forbiddenindex=true
+wssh --address='127.0.0.1' --port=28000 --forbiddenindex=true
+
+# 或者用`--key=KEY1KEY2`指定DES密钥
+wssh --address='127.0.0.1' --port=28000 --forbiddenindex=true --key=KEY1KEY2
 ```
 
 
