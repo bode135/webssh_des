@@ -547,7 +547,7 @@ class IndexHandler(MixinHandler, tornado.web.RequestHandler):
         _ct = self.request.query_arguments.get('ct')        # ciphertext
         if _ct:
             ct = _ct[0].decode('utf-8')
-            ret = self.check_ciphertext(ct, expired_seconds=3)
+            ret = self.check_ciphertext(ct, expired_seconds=5 * 60)
             if not ret:
                 return
         else:

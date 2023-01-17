@@ -124,7 +124,6 @@ jQuery(function ($) {
     return null;
   }
 
-
   //#region
 
   // DES encrypt
@@ -259,7 +258,8 @@ jQuery(function ($) {
     }
 
 
-    if (1) {
+    var use_des_encrypt = true;
+    if (use_des_encrypt) {
       /*
       # 提升安全性从两方面入手:
       
@@ -269,9 +269,8 @@ jQuery(function ($) {
         2.2 客户端发送请求的时间与当前服务器时间相差不能超过3分钟
         2.3 缓存报废密文库, 保存最近5分钟使用过的密文
         2.4 先校验客户端请求的密文是否在缓存中, 如果在, 则报废
-      3. 校验还得是服务端... 以上思路在服务端再次实现了一遍
+      3. 校验还得是服务端... 以上思路在服务端再次实现了一遍, 删除了前端的des校验..
       */
-      // var key = "TESTKEY2";
       var key= document.my_des_key;
 
       // --- convert current url's queryString to jsonData
@@ -283,36 +282,15 @@ jQuery(function ($) {
         jsonData[key] = value;
       }
 
-      // console.log("************ parse_url_data.jsonData.get(ct):", jsonData["ct1"]);
-
-      // var ciphertext = JSON.parse(jsonData["ct"]);
       var ciphertext = jsonData["ct"];
       if (ciphertext != null) {
-        // var _is_used = check_ciphertext_is_used(ciphertext);
-        // if (_is_used) {
-        //   console.log("*** Error: ct has already been used!");
-        //   return;
-        // }
-
         var _message_str = decryptByDES(ciphertext, key);
         var message = JSON.parse(_message_str);
-
-        var given_timestamp = message['time'];
-
-        // console.log("--- current_time:", formatTimestamp(Date.now()), '--- given_time:', formatTimestamp(given_timestamp));
-
-        // var _time_is_expired = check_time_is_expired(given_timestamp, 5);
-        // if (_time_is_expired) {
-        //   console.log("*** error: ct's time is expired!");
-        //   return;
-        // }
 
         delete message['time'];
 
         for (let key in message) {
           val = message[key];
-
-          // console.log('for ---- ', key + ": " + val);
 
           if (form_keys.indexOf(key) >= 0) {
             form_map[key] = val;
@@ -322,16 +300,7 @@ jQuery(function ($) {
           }
         }
 
-
-        console.log("====================================\n\n");
-
         return;
-
-        // var message = { "username": "root", "password": "passwd", "hostname": "10.120.65.140", "port": 22240, "time": Date.now() };
-        // //加密
-        // var msg_str = JSON.stringify(message);
-        // desMessage = encryptByDES(msg_str, key);
-        // console.log('*** encryptByDES --- desMessage :', desMessage);
       }
     }
 
