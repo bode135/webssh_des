@@ -65,3 +65,5 @@ target/
 known_hosts
 
 shells/
+
+.idea/
