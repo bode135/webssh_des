@@ -17,6 +17,13 @@
 
 > 假设webssh的服务器为`www.domain.com`, ssh目标服务器验证信息为`{ "username": "root", "password": "passwd", "hostname": "localhost", "port": 22 }`
 
+### 首先服务端运行
+
+> nginx配置参考原项目`Readme.md`
+
+```
+python run.py --address='127.0.0.1' --port=28000 --forbiddenindex=true
+```
 
 
 ### 原来的自动登录请求
