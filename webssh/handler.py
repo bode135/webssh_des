@@ -462,7 +462,7 @@ class IndexHandler(MixinHandler, tornado.web.RequestHandler):
         try:
             ssh.connect(*args, timeout=options.timeout)
             transport = ssh.get_transport()
-            transport.set_keepalive(5*60)
+            transport.set_keepalive(6*60*60)
         except socket.error:
             raise ValueError('Unable to connect to {}:{}'.format(*dst_addr))
         except paramiko.BadAuthenticationType:
