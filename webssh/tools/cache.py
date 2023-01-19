@@ -21,16 +21,16 @@ class Cache:
         if expired_time:
             self.expirations[key] = time.time() + expired_time
 
-    def get(self, key):
+    def get(self, key, default=None):
         if key in self.cache:
             if key in self.expirations:
                 if time.time() > self.expirations[key]:
                     del self.cache[key]
                     del self.expirations[key]
-                    return None
+                    return default
             return self.cache[key]
         else:
-            return None
+            return default
 
     def delete_expired_keys(self):
         current_time = time.time()
