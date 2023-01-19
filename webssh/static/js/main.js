@@ -707,7 +707,7 @@ jQuery(function ($) {
     };
 
     sock.onclose = function (e) {
-      term.dispose();
+      console.log("~~~~~~~~~~~~ onclose");
 
       if (document.forbiddenindex){
         var msg = "SSH链接已关闭.";
@@ -717,6 +717,8 @@ jQuery(function ($) {
         document.title = "Closed";
         return;
       }
+
+      term.dispose();
 
       term = undefined;
       sock = undefined;
