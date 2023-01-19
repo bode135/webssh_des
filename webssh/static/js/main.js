@@ -3,6 +3,7 @@
 var jQuery;
 var wssh = {};
 
+var forbiddenindex = document.forbiddenindex;
 
 (function () {
   // For FormData without getter and setter
@@ -709,7 +710,8 @@ jQuery(function ($) {
     sock.onclose = function (e) {
       console.log("~~~~~~~~~~~~ onclose");
 
-      if (document.forbiddenindex){
+      // if (1){
+      if (forbiddenindex){
         var msg = "SSH链接已关闭.";
         if (e.reason)
           msg += " reason: " + e.reason;
