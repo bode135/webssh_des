@@ -101,7 +101,7 @@
     <script>
         var key= "{{ key }}";
         document.my_des_key = key;
-        var forbiddenindex = {{ forbiddenindex }};
+        var forbiddenindex = "{{ forbiddenindex }}" == "True"? true : false;
         document.forbiddenindex = forbiddenindex;
     </script>
   </body>
