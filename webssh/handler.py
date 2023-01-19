@@ -576,7 +576,7 @@ class IndexHandler(MixinHandler, tornado.web.RequestHandler):
                     403, "Forbidden login by index.html"
                 )
 
-        self.render('index.html', debug=self.debug, font=self.font, key=options.key)
+        self.render('index.html', debug=self.debug, font=self.font, key=options.key, forbiddenindex=options.forbiddenindex)
 
     @tornado.gen.coroutine
     def post(self):

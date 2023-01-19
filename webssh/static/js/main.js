@@ -708,6 +708,16 @@ jQuery(function ($) {
 
     sock.onclose = function (e) {
       term.dispose();
+
+      if (document.forbiddenindex){
+        var msg = "SSH链接已关闭.";
+        if (e.reason)
+          msg += " reason: " + e.reason;
+        document.body.innerHTML = msg;
+        document.title = "Closed";
+        return;
+      }
+
       term = undefined;
       sock = undefined;
       reset_wssh();
