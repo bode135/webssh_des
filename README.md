@@ -138,7 +138,7 @@ var ciphertext = encryptByDES(msg_str, key);
 console.log('--- ciphertext:', ciphertext);
 
 // 解密
-var new_msg_str = decryptByD	ES(ciphertext.toUpperCase(), key)
+var new_msg_str = decryptByDES(ciphertext.toUpperCase(), key)
 var new_message = JSON.parse(new_msg_str);
 console.log('--- new_message:', new_message);
 
